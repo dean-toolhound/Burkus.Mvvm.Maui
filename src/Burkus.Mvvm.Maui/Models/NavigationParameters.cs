@@ -105,6 +105,60 @@ public class NavigationParameters : Dictionary<string, object>
         }
     }
 
+    // 2024-02-06 - DP - added method
+    /// <summary>
+    /// Gets the value associated with the specified parameter name and converts it to the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type to which the parameter value should be converted.</typeparam>
+    /// <param name="parameterName">The name of the parameter whose value is to be retrieved.</param>
+    /// <returns>
+    /// A bool value if parameter exists and read successfully 
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown when the parameter value cannot be converted to the specified type.
+    /// </exception>
+    public bool TryGetValue<T>(string parameterName, out T? returnValue)
+    {
+        returnValue = default;
+
+        if (!ContainsKey(parameterName))
+        {
+            return false;
+        }
+
+        var value = this[parameterName];
+
+        if (value == null)
+        {
+            return true;
+        }
+
+        try
+        {
+            if (typeof(T).IsEnum)
+            {
+                returnValue = (T)Enum.Parse(typeof(T), value.ToString());
+            }
+            else
+            {
+                // get the non-nullable type of T
+                var underlyingType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+                // convert the value to the non-nullable type
+                var convertedValue = Convert.ChangeType(value, underlyingType);
+
+                // cast the converted value to T
+                returnValue = (T)convertedValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ArgumentException($"Cannot convert parameter value to type {typeof(T)}", ex);
+        }
+
+        return true;
+    }
+
     /// <summary>
     /// Merge this NavigationParameter object with one or more NavigationParameters.
     /// </summary>

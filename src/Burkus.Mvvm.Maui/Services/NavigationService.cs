@@ -75,7 +75,9 @@ internal class NavigationService : INavigationService
     {
         await HandleNavigation<Page>(async () =>
             {
-                if (navigationParameters.UseModalNavigation)
+                // 2024-02-06 - DP - check if there is something on the modal stack so we don't have to specify UseModalNavigation
+                //if (navigationParameters.UseModalNavigation)
+                if (navigationParameters.UseModalNavigation || Application.Current.MainPage.Navigation.ModalStack.Count > 0)
                 {
                     _ = await Application.Current.MainPage.Navigation.PopModalAsync(navigationParameters.UseAnimatedNavigation);
                 }

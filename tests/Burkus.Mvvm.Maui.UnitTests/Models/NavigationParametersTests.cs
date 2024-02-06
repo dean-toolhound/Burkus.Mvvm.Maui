@@ -184,6 +184,139 @@ public class NavigationParametersTests
         Assert.Equal('C', result);
     }
 
+    // -----------------------------
+
+    [Fact]
+    public void TryGetValue_ExistingBooleanParameter_ReturnsValue()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["MyBoolParam"] = true;
+
+        // Act
+        var result = navigationParameters.TryGetValue<bool>("MyBoolParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.True(returnValue);
+    }
+
+    [Fact]
+    public void TryGetValue_NonExistentParameter_ReturnsDefaultValue()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+
+        // Act
+        var result = navigationParameters.TryGetValue<bool>("NonExistentParam", out var returnValue);
+
+        // Assert
+        Assert.False(result);
+        Assert.False(returnValue);
+    }
+
+    [Fact]
+    public void TryGetValue_InvalidConversion_ThrowsArgumentException()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["InvalidParam"] = "InvalidValue";
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => navigationParameters.TryGetValue<int>("InvalidParam", out var returnValue));
+    }
+
+    [Fact]
+    public void TryGetValue_EnumParameter_ReturnsEnumValue()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["EnumParam"] = SampleEnum.Option2;
+
+        // Act
+        var result = navigationParameters.TryGetValue<SampleEnum>("EnumParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal(SampleEnum.Option2, returnValue);
+    }
+
+    [Fact]
+    public void TryGetValue_EnumParameterInvalidValue_ThrowsArgumentException()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["EnumParam"] = "InvalidValue";
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => navigationParameters.TryGetValue<SampleEnum>("EnumParam", out var returnValue));
+    }
+
+    [Fact]
+    public void TryGetValue_ObjectParameter_ReturnsObject()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        var testObject = new object();
+
+        navigationParameters["ObjectParam"] = testObject;
+
+        // Act
+        var result = navigationParameters.TryGetValue<object>("ObjectParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal(testObject, returnValue);
+    }
+
+    [Fact]
+    public void TryGetValue_ObjectParameter_NullValue_ReturnsNull()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["ObjectParam"] = null;
+
+        // Act
+        var result = navigationParameters.TryGetValue<object>("ObjectParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.Null(returnValue);
+
+    }
+
+    [Fact]
+    public void TryGetValue_NullableValueParameters_ReturnsNullValue()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["NullableCharParam"] = null;
+
+        // Act
+        var result = navigationParameters.TryGetValue<char?>("NullableCharParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.Null(returnValue);
+    }
+
+    [Fact]
+    public void TryGetValue_NullableValueParameters_ReturnsCharValue()
+    {
+        // Arrange
+        var navigationParameters = new NavigationParameters();
+        navigationParameters["NullableCharParam"] = 'C';
+
+        // Act
+        var result = navigationParameters.TryGetValue<char?>("NullableCharParam", out var returnValue);
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal('C', returnValue);
+    }
+
+    // -----------------------------
+
     [Fact]
     public void MergeNavigationParameters_WhenCalledWithEmptyDictionaries_ReturnsEmptyDictionary()
     {
