@@ -4,6 +4,21 @@ public interface INavigationService
 {
     #region Core navigation methods
 
+    ///// <summary>
+    ///// Push a new page onto the navigation stack.
+    ///// </summary>
+    ///// <param name="pageName">Name of Page</param>
+    ///// <returns>A completed task</returns>
+    //Task Push(string pageName);
+
+    ///// <summary>
+    ///// Push a new page onto the navigation stack.
+    ///// </summary>
+    ///// <param name="pageName">Name of Page</param>
+    ///// <param name="navigationParameters">Navigation parameters to pass</param>
+    ///// <returns>A completed task</returns>
+    //Task Push(string pageName, NavigationParameters navigationParameters);
+
     /// <summary>
     /// Push a new page onto the navigation stack.
     /// </summary>
