@@ -420,6 +420,13 @@ return BackButtonNavigator.HandleBackButtonPressed();
 
 [Create an issue](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/new/choose) to add your own suggestions. Or, **support the project** and help influence its direction by [sponsoring me](https://github.com/sponsors/BurkusCat).
 
+# Built with Burkus.Mvvm.Maui 🚀
+Examples of projects and companies that use Burkus.Mvvm.Maui:
+
+| <a href="https://burkus.co.uk/projects/catlists"><img align="right" src="https://raw.githubusercontent.com/BurkusCat/Burkus.Mvvm.Maui/main/art/catlistslogo.png" alt="The Catlists game logo. It is a yellow D20 dice with cat ears"></a> |          |          |
+| -------- | -------- | -------- |
+| [Catlists](https://burkus.co.uk/projects/catlists) is created by [Burkus](https://burkus.co.uk/) and is available for [iOS](https://apps.apple.com/us/app/catlists/id6471727698), [Android](https://play.google.com/store/apps/details?id=uk.co.burkus.catlists), [Microsoft Store](https://www.microsoft.com/en-gb/store/r/catlists/9n4hjrrl377b), and [Steam](https://store.steampowered.com/app/2772590/Catlists/). |||
+
 # Contributing 💁‍♀️
 Contributions are very welcome! Please see the [contributing guide](CONTRIBUTING.MD) to get started.
 
