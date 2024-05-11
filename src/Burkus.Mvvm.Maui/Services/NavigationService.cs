@@ -13,7 +13,7 @@ internal class NavigationService : INavigationService
     {
         await HandleNavigation<T>(async () =>
             {
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 if (navigationParameters.UseModalNavigation)
                 {
@@ -107,7 +107,7 @@ internal class NavigationService : INavigationService
         await HandleNavigation<Page>(async () =>
             {
                 var navigation = Application.Current.MainPage.Navigation;
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 navigation.InsertPageBefore(pageToNavigateTo, navigation.NavigationStack.Last());
                 await navigation.PopAsync(navigationParameters.UseAnimatedNavigation);
@@ -127,7 +127,7 @@ internal class NavigationService : INavigationService
         await HandleNavigation<Page>(async () =>
             {
                 var navigation = Application.Current.MainPage.Navigation;
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 if (navigation.NavigationStack.Count > 0)
                 {
@@ -201,7 +201,7 @@ internal class NavigationService : INavigationService
                 else
                 {
                     // push pages relatively onto the stack
-                    var pageToNavigateTo = ServiceResolver.Resolve(instructions[i].PageType) as Page;
+                    var pageToNavigateTo = GetPageToNavigateTo(instructions[i].PageType);
                     var pushNavigationParameters = instructions[i].QueryParameters.MergeNavigationParameters(navigationParameters);
 
                     if (pushNavigationParameters.UseModalNavigation)
@@ -254,7 +254,7 @@ internal class NavigationService : INavigationService
         else
         {
             // push page relatively onto the stack
-            var pageToNavigateTo = ServiceResolver.Resolve(lastInstruction.PageType) as Page;
+            var pageToNavigateTo = GetPageToNavigateTo(lastInstruction.PageType);
             var pushNavigationParameters = lastInstruction.QueryParameters.MergeNavigationParameters(navigationParameters);
 
             if (pushNavigationParameters.UseModalNavigation)
@@ -344,7 +344,7 @@ internal class NavigationService : INavigationService
             return;
         }
 
-        var pageToNavigateTo = ServiceResolver.Resolve<T>();
+        var pageToNavigateTo = GetPageToNavigateTo<T>();
 
         // wrap the detail in a NavigationPage
         flyoutPage.Detail = new NavigationPage(pageToNavigateTo);
@@ -361,6 +361,26 @@ internal class NavigationService : INavigationService
     #endregion Flyout navigation methods
 
     #region Internal implementation
+
+    private T GetPageToNavigateTo<T>()
+        where T: Page
+    {
+        var pageToNavigateTo = ServiceResolver.Resolve<T>();
+
+        return pageToNavigateTo;
+    }
+
+    private Page GetPageToNavigateTo(Type pageType)
+    {
+        var pageToNavigateTo = ServiceResolver.Resolve(pageType) as Page;
+
+        if (pageToNavigateTo == null)
+        {
+            // todo: warn about this being null in https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/17 ?
+        }
+
+        return pageToNavigateTo;
+    }
 
     private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
         where T : Page
