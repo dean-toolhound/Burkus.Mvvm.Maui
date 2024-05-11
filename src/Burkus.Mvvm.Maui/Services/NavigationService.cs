@@ -287,77 +287,6 @@ internal class NavigationService : INavigationService
 
     #endregion URI navigation methods
 
-    #region Internal implementation
-
-    private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
-        where T : Page
-    {
-        var fromBindingContext = MauiPageUtility.GetTopPageBindingContext();
-
-        await LifecycleEventUtility.TriggerOnNavigatingFrom(fromBindingContext, navigationParameters);
-
-        await navigationAction.Invoke();
-
-        await LifecycleEventUtility.TriggerOnNavigatedFrom(fromBindingContext, navigationParameters);
-
-        var toBindingContext = MauiPageUtility.GetTopPageBindingContext();
-        await LifecycleEventUtility.TriggerOnNavigatedTo(toBindingContext, navigationParameters);
-
-        // if the SelectTab parameter is used, we will switch tab
-        SelectTabFromParameters(navigationParameters);
-    }
-
-    private void SelectTabFromParameters(NavigationParameters navigationParameters)
-    {
-        if (string.IsNullOrWhiteSpace(navigationParameters.SelectTab))
-        {
-            // no tab to select
-            return;
-        }
-
-        var tabType = UriUtility.FindPageType(navigationParameters.SelectTab);
-        SelectTabWithType(tabType);
-    }
-
-    /// <summary>
-    /// This method allows the <see cref="SelectTab{T}()"/> to be called with reflection.
-    /// </summary>
-    private async void SelectTabWithType(Type tabType)
-    {
-        var selectTabMethod = GetType()
-            .GetMethod(nameof(SelectTab))
-            .MakeGenericMethod(tabType);
-        selectTabMethod.Invoke(this, null);
-    }
-
-    /// <summary>
-    /// This method searches for and tries to find a TabbedPage that is visible to the user.
-    /// </summary>
-    /// <param name="page">Page to search for a TabbedPage in</param>
-    /// <returns>A tabbeed page if found</returns>
-    private TabbedPage FindVisibleTabbedPage(Page page)
-    {
-        return page switch
-        {
-            TabbedPage tabbedPage => tabbedPage,
-            FlyoutPage { Detail: TabbedPage flyoutTabbedPage } => flyoutTabbedPage,
-            FlyoutPage { Detail: var detail } => GetTabbedPageFromNavigationPage(detail),
-            _ => GetTabbedPageFromNavigationPage(page)
-        };
-    }
-
-    private TabbedPage GetTabbedPageFromNavigationPage(Page page)
-    {
-        if (page is NavigationPage { CurrentPage: TabbedPage tabbedPage })
-        {
-            return tabbedPage;
-        }
-
-        return null;
-    }
-
-    #endregion Internal implementation
-
     #region Tab navigation methods
 
     public void SelectTab<T>()
@@ -430,4 +359,75 @@ internal class NavigationService : INavigationService
     // a parameter? ToNavigationPage could be used so it could be used with URL navigation or the existing methods
 
     #endregion Flyout navigation methods
+
+    #region Internal implementation
+
+    private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
+        where T : Page
+    {
+        var fromBindingContext = MauiPageUtility.GetTopPageBindingContext();
+
+        await LifecycleEventUtility.TriggerOnNavigatingFrom(fromBindingContext, navigationParameters);
+
+        await navigationAction.Invoke();
+
+        await LifecycleEventUtility.TriggerOnNavigatedFrom(fromBindingContext, navigationParameters);
+
+        var toBindingContext = MauiPageUtility.GetTopPageBindingContext();
+        await LifecycleEventUtility.TriggerOnNavigatedTo(toBindingContext, navigationParameters);
+
+        // if the SelectTab parameter is used, we will switch tab
+        SelectTabFromParameters(navigationParameters);
+    }
+
+    private void SelectTabFromParameters(NavigationParameters navigationParameters)
+    {
+        if (string.IsNullOrWhiteSpace(navigationParameters.SelectTab))
+        {
+            // no tab to select
+            return;
+        }
+
+        var tabType = UriUtility.FindPageType(navigationParameters.SelectTab);
+        SelectTabWithType(tabType);
+    }
+
+    /// <summary>
+    /// This method allows the <see cref="SelectTab{T}()"/> to be called with reflection.
+    /// </summary>
+    private async void SelectTabWithType(Type tabType)
+    {
+        var selectTabMethod = GetType()
+            .GetMethod(nameof(SelectTab))
+            .MakeGenericMethod(tabType);
+        selectTabMethod.Invoke(this, null);
+    }
+
+    /// <summary>
+    /// This method searches for and tries to find a TabbedPage that is visible to the user.
+    /// </summary>
+    /// <param name="page">Page to search for a TabbedPage in</param>
+    /// <returns>A tabbeed page if found</returns>
+    private TabbedPage FindVisibleTabbedPage(Page page)
+    {
+        return page switch
+        {
+            TabbedPage tabbedPage => tabbedPage,
+            FlyoutPage { Detail: TabbedPage flyoutTabbedPage } => flyoutTabbedPage,
+            FlyoutPage { Detail: var detail } => GetTabbedPageFromNavigationPage(detail),
+            _ => GetTabbedPageFromNavigationPage(page)
+        };
+    }
+
+    private TabbedPage GetTabbedPageFromNavigationPage(Page page)
+    {
+        if (page is NavigationPage { CurrentPage: TabbedPage tabbedPage })
+        {
+            return tabbedPage;
+        }
+
+        return null;
+    }
+
+    #endregion Internal implementation
 }
