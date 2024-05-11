@@ -293,7 +293,7 @@ internal class NavigationService : INavigationService
         where T : Page
     {
         var topPage = MauiPageUtility.GetTopPage();
-        var tabbedPage = FindVisibleTabbedPage(topPage);
+        var tabbedPage = MauiPageUtility.FindVisibleTabbedPage(topPage);
 
         if (tabbedPage == null)
         {
@@ -367,6 +367,8 @@ internal class NavigationService : INavigationService
     {
         var pageToNavigateTo = ServiceResolver.Resolve<T>();
 
+        SubscribeToPageVisibilityEvents(pageToNavigateTo);
+
         return pageToNavigateTo;
     }
 
@@ -374,12 +376,43 @@ internal class NavigationService : INavigationService
     {
         var pageToNavigateTo = ServiceResolver.Resolve(pageType) as Page;
 
-        if (pageToNavigateTo == null)
+        if (pageToNavigateTo != null)
+        {
+            SubscribeToPageVisibilityEvents(pageToNavigateTo);
+        }
+        else
         {
             // todo: warn about this being null in https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/17 ?
         }
 
         return pageToNavigateTo;
+    }
+
+    private void SubscribeToPageVisibilityEvents(Page page)
+    {
+        // todo: unsubscribe from these events
+        page.Appearing += Page_Appearing;
+        page.Disappearing += Page_Disappearing;
+    }
+
+    private void Page_Appearing(object? sender, EventArgs e)
+    {
+        var onAppearingViewModel = MauiPageUtility.GetTopPageBindingContext() as IPageVisibilityEvents;
+
+        if (onAppearingViewModel != null)
+        {
+            onAppearingViewModel.OnAppearing();
+        }
+    }
+
+    private void Page_Disappearing(object? sender, EventArgs e)
+    {
+        var onDisappearingViewModel = MauiPageUtility.GetTopPageBindingContext() as IPageVisibilityEvents;
+
+        if (onDisappearingViewModel != null)
+        {
+            onDisappearingViewModel.OnDisappearing();
+        }
     }
 
     private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
@@ -421,32 +454,6 @@ internal class NavigationService : INavigationService
             .GetMethod(nameof(SelectTab))
             .MakeGenericMethod(tabType);
         selectTabMethod.Invoke(this, null);
-    }
-
-    /// <summary>
-    /// This method searches for and tries to find a TabbedPage that is visible to the user.
-    /// </summary>
-    /// <param name="page">Page to search for a TabbedPage in</param>
-    /// <returns>A tabbeed page if found</returns>
-    private TabbedPage FindVisibleTabbedPage(Page page)
-    {
-        return page switch
-        {
-            TabbedPage tabbedPage => tabbedPage,
-            FlyoutPage { Detail: TabbedPage flyoutTabbedPage } => flyoutTabbedPage,
-            FlyoutPage { Detail: var detail } => GetTabbedPageFromNavigationPage(detail),
-            _ => GetTabbedPageFromNavigationPage(page)
-        };
-    }
-
-    private TabbedPage GetTabbedPageFromNavigationPage(Page page)
-    {
-        if (page is NavigationPage { CurrentPage: TabbedPage tabbedPage })
-        {
-            return tabbedPage;
-        }
-
-        return null;
     }
 
     #endregion Internal implementation
