@@ -308,7 +308,9 @@ public static class MauiProgram
 ```
 
 ## Lifecycle events and passing parameters
+
 ### INavigatedEvents
+
 If your viewmodel inherits from this interface, the below events will trigger for it.
 - `OnNavigatedTo(parameters)`
   - You can use this lifecycle event to retrieve parameters passed to this page
@@ -331,6 +333,7 @@ If your viewmodel inherits from this interface, the below events will trigger fo
   ```
 
 ### INavigatingEvents
+
 If your viewmodel inherits from this interface, the below events will trigger for it.
 - `OnNavigatingFrom(parameters)`
   - Allows the page you are leaving to add additional parameters to the page you are navigating to
@@ -341,7 +344,32 @@ If your viewmodel inherits from this interface, the below events will trigger fo
       parameters.Add("username", username);   
   }
   ```
+
+### IPageVisibilityEvents
+
+If your viewmodel inherits from this interface, the below events will trigger for it.
+- `OnAppearing()`
+  - Allows you to customize behavior immediately prior to the page becoming visible
+  - Is triggered by MAUI's `Page`' [OnAppearing](https://learn.microsoft.com/en-us/dotnet/api/microsoft.maui.controls.page.onappearing) event.
+  ``` csharp
+  public void OnAppearing()
+  {
+    ...
+  }
+  ```
+
+- `OnDisappearing()`
+  - Allows you to customize behavior as the page disappears
+  - Is triggered by MAUI's `Page`'s [OnDisappearing](https://learn.microsoft.com/en-us/dotnet/api/microsoft.maui.controls.page.onappearing) event.
+  ``` csharp
+  public void OnDisappearing()
+  {
+    ...
+  }
+  ```
+
 ### Reserved navigation parameters
+
 Several parameter keys have been pre-defined and are using by the `Burkus.Mvvm.Maui` library to adjust how navigation is performed.
 
 - `ReservedNavigationParameters.UseAnimatedNavigation`
@@ -414,7 +442,6 @@ return BackButtonNavigator.HandleBackButtonPressed();
 - [Popup pages](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/2)
 - [Nested viewmodels](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/5)
 - [OnNavigatingTo()](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/6)
-- [IPageVisibilityEvents](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/7)
 - [Navigation Guards](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/28)
 - [...and more](https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues)
 
