@@ -2,6 +2,8 @@
 
 internal static class LifecycleEventUtility
 {
+    #region INavigatingEvents
+
     internal static async Task TriggerOnNavigatingFrom(object bindingContext, NavigationParameters navigationParameters)
     {
         var navigatingFromViewModel = bindingContext as INavigatingEvents;
@@ -11,6 +13,10 @@ internal static class LifecycleEventUtility
             await navigatingFromViewModel.OnNavigatingFrom(navigationParameters);
         }
     }
+
+    #endregion INavigatingEvents
+
+    #region INavigatedEvents
 
     internal static async Task TriggerOnNavigatedFrom(object bindingContext, NavigationParameters navigationParameters)
     {
@@ -22,8 +28,6 @@ internal static class LifecycleEventUtility
         }
     }
 
-    #region IPageVisibilityEvents
-
     internal static async Task TriggerOnNavigatedTo(object bindingContext, NavigationParameters navigationParameters)
     {
         var navigatedToViewModel = bindingContext as INavigatedEvents;
@@ -34,37 +38,13 @@ internal static class LifecycleEventUtility
         }
     }
 
+    #endregion INavigatedEvents
+
+    #region IPageVisibilityEvents
+
     internal static void SubscribeToPageVisibilityEvents(Page page)
     {
-        // todo: unsubscribe from these events - use https://stackoverflow.com/a/70869441/3991315 ?
-        page.Appearing += Page_Appearing;
-        page.Disappearing += Page_Disappearing;
-    }
-
-    internal static void Page_Appearing(object? sender, EventArgs e)
-    {
-        var onAppearingViewModel = GetPageVisibilityEventsViewModel(sender);
-
-        if (onAppearingViewModel != null)
-        {
-            onAppearingViewModel.OnAppearing();
-        }
-    }
-
-    internal static void Page_Disappearing(object? sender, EventArgs e)
-    {
-        var onDisappearingViewModel = GetPageVisibilityEventsViewModel(sender);
-
-        if (onDisappearingViewModel != null)
-        {
-            onDisappearingViewModel.OnDisappearing();
-        }
-    }
-
-    internal static IPageVisibilityEvents GetPageVisibilityEventsViewModel(object? sender)
-    {
-        var page = sender as Page;
-        return page?.BindingContext as IPageVisibilityEvents;
+        page.Behaviors.Add(new PageVisibilityEventBehavior());
     }
 
     #endregion IPageVisibilityEvents
