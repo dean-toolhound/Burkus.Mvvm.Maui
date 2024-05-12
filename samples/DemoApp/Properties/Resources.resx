@@ -217,12 +217,20 @@
     <value>Logout with URI syntax:</value>
     <comment>Translate</comment>
   </data>
+  <data name="Home_Button_PageVisibilityEventsDemo" xml:space="preserve">
+    <value>Page Visibility Events demo</value>
+    <comment>Translate</comment>
+  </data>
   <data name="Home_Button_StartTabbedPageOnBetaTab" xml:space="preserve">
     <value>Start Tabbed Page on Beta tab</value>
     <comment>Translate</comment>
   </data>
   <data name="Home_Button_TabbedPageDemo" xml:space="preserve">
     <value>Tabbed Page demo</value>
+    <comment>Translate</comment>
+  </data>
+  <data name="Home_SubHeading_Events" xml:space="preserve">
+    <value>Events:</value>
     <comment>Translate</comment>
   </data>
   <data name="Home_SubHeading_FlyoutNavigation" xml:space="preserve">
@@ -279,6 +287,14 @@
   </data>
   <data name="Login_Validation_RequiredUsername" xml:space="preserve">
     <value>You must enter a username.</value>
+    <comment>Translate</comment>
+  </data>
+  <data name="PageVisibilityEvent_ShowOnAppearing" xml:space="preserve">
+    <value>I show OnAppearing and hide OnDisappearing</value>
+    <comment>Translate</comment>
+  </data>
+  <data name="PageVisibilityEvent_Title" xml:space="preserve">
+    <value>Page Visibility Events</value>
     <comment>Translate</comment>
   </data>
   <data name="Register_Instructions" xml:space="preserve">

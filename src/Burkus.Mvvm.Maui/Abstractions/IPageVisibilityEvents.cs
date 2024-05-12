@@ -5,12 +5,10 @@ public interface IPageVisibilityEvents
     /// <summary>
     /// Is triggered by the <see cref="Page.OnAppearing"/> event.
     /// </summary>
-    /// <returns>A completed task</returns>
-    Task OnAppearing();
+    void OnAppearing();
 
     /// <summary>
     /// Is triggered by the <see cref="Page.OnDisappearing"/> event.
     /// </summary>
-    /// <returns>A completed task</returns>
-    Task OnDisappearing();
+    void OnDisappearing();
 }

@@ -146,6 +146,15 @@ public partial class HomeViewModel : BaseViewModel
     }
 
     /// <summary>
+    /// Navigate to the demo page visibility events page.
+    /// </summary>
+    [RelayCommand]
+    private async Task GoToPageVisibilityEventsDemo()
+    {
+        await navigationService.Push<PageVisibilityEventPage>();
+    }
+
+    /// <summary>
     /// Exit the application.
     /// </summary>
     [RelayCommand]
