@@ -286,6 +286,15 @@ namespace DemoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map Properties demo.
+        /// </summary>
+        internal static string Home_Button_MapPropertiesDemo {
+            get {
+                return ResourceManager.GetString("Home_Button_MapPropertiesDemo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page Visibility Events demo.
         /// </summary>
         internal static string Home_Button_PageVisibilityEventsDemo {
@@ -336,6 +345,15 @@ namespace DemoApp.Properties {
         internal static string Home_SubHeading_ModalNavigation {
             get {
                 return ResourceManager.GetString("Home_SubHeading_ModalNavigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter Passing:.
+        /// </summary>
+        internal static string Home_SubHeading_ParameterPassing {
+            get {
+                return ResourceManager.GetString("Home_SubHeading_ParameterPassing", resourceCulture);
             }
         }
         
@@ -444,6 +462,15 @@ namespace DemoApp.Properties {
         internal static string Login_Validation_RequiredUsername {
             get {
                 return ResourceManager.GetString("Login_Validation_RequiredUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Properties.
+        /// </summary>
+        internal static string MapProperties_Title {
+            get {
+                return ResourceManager.GetString("MapProperties_Title", resourceCulture);
             }
         }
         

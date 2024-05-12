@@ -30,6 +30,20 @@ internal static class LifecycleEventUtility
 
     internal static async Task TriggerOnNavigatedTo(object bindingContext, NavigationParameters navigationParameters)
     {
+        // map properties specified in attributes
+        var type = bindingContext.GetType();
+        var attributes = type.GetCustomAttributes(typeof(MapNavigationParameterAttribute), true);
+
+        foreach (MapNavigationParameterAttribute attribute in attributes)
+        {
+            // get the property on the ViewModel
+            var propertyInfo = type.GetProperty(attribute.PropertyName);
+
+            var matchingParameterValue = navigationParameters.GetUntypedValue(attribute.NavigationParameterKey);
+            propertyInfo?.SetValue(bindingContext, matchingParameterValue);
+        }
+
+        // trigger the OnNavigatedToEvent
         var navigatedToViewModel = bindingContext as INavigatedEvents;
 
         if (navigatedToViewModel != null)
