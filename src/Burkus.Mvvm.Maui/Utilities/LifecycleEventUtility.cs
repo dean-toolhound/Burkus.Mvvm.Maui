@@ -22,6 +22,8 @@ internal static class LifecycleEventUtility
         }
     }
 
+    #region IPageVisibilityEvents
+
     internal static async Task TriggerOnNavigatedTo(object bindingContext, NavigationParameters navigationParameters)
     {
         var navigatedToViewModel = bindingContext as INavigatedEvents;
@@ -31,4 +33,39 @@ internal static class LifecycleEventUtility
             await navigatedToViewModel.OnNavigatedTo(navigationParameters);
         }
     }
+
+    internal static void SubscribeToPageVisibilityEvents(Page page)
+    {
+        // todo: unsubscribe from these events
+        page.Appearing += Page_Appearing;
+        page.Disappearing += Page_Disappearing;
+    }
+
+    internal static void Page_Appearing(object? sender, EventArgs e)
+    {
+        var onAppearingViewModel = GetPageVisibilityEventsViewModel(sender);
+
+        if (onAppearingViewModel != null)
+        {
+            onAppearingViewModel.OnAppearing();
+        }
+    }
+
+    internal static void Page_Disappearing(object? sender, EventArgs e)
+    {
+        var onDisappearingViewModel = GetPageVisibilityEventsViewModel(sender);
+
+        if (onDisappearingViewModel != null)
+        {
+            onDisappearingViewModel.OnDisappearing();
+        }
+    }
+
+    internal static IPageVisibilityEvents GetPageVisibilityEventsViewModel(object? sender)
+    {
+        var page = sender as Page;
+        return page?.BindingContext as IPageVisibilityEvents;
+    }
+
+    #endregion IPageVisibilityEvents
 }

@@ -367,7 +367,7 @@ internal class NavigationService : INavigationService
     {
         var pageToNavigateTo = ServiceResolver.Resolve<T>();
 
-        SubscribeToPageVisibilityEvents(pageToNavigateTo);
+        LifecycleEventUtility.SubscribeToPageVisibilityEvents(pageToNavigateTo);
 
         return pageToNavigateTo;
     }
@@ -378,7 +378,7 @@ internal class NavigationService : INavigationService
 
         if (pageToNavigateTo != null)
         {
-            SubscribeToPageVisibilityEvents(pageToNavigateTo);
+            LifecycleEventUtility.SubscribeToPageVisibilityEvents(pageToNavigateTo);
         }
         else
         {
@@ -386,33 +386,6 @@ internal class NavigationService : INavigationService
         }
 
         return pageToNavigateTo;
-    }
-
-    private void SubscribeToPageVisibilityEvents(Page page)
-    {
-        // todo: unsubscribe from these events
-        page.Appearing += Page_Appearing;
-        page.Disappearing += Page_Disappearing;
-    }
-
-    private void Page_Appearing(object? sender, EventArgs e)
-    {
-        var onAppearingViewModel = MauiPageUtility.GetTopPageBindingContext() as IPageVisibilityEvents;
-
-        if (onAppearingViewModel != null)
-        {
-            onAppearingViewModel.OnAppearing();
-        }
-    }
-
-    private void Page_Disappearing(object? sender, EventArgs e)
-    {
-        var onDisappearingViewModel = MauiPageUtility.GetTopPageBindingContext() as IPageVisibilityEvents;
-
-        if (onDisappearingViewModel != null)
-        {
-            onDisappearingViewModel.OnDisappearing();
-        }
     }
 
     private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
