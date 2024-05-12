@@ -126,6 +126,34 @@ public class HomeViewModelTests
     }
 
     [Fact]
+    public void GoToFlyoutPageDemo_WhenCalled_NavigatesToDemoFlyoutPage()
+    {
+        // Arrange
+        var viewModel = ViewModel;
+
+        // Act
+        viewModel.GoToFlyoutPageDemoCommand.Execute(null);
+
+        // Assert
+        mockNavigationService.Received().Navigate(
+            "DemoFlyoutPage",
+            Arg.Is<NavigationParameters>(x => x.GetValue<bool>("UseModalNavigation") == true));
+    }
+
+    [Fact]
+    public void GoToPageVisibilityEventsDemo_WhenCalled_NavigatesToDemoPageVisibilityEventsPage()
+    {
+        // Arrange
+        var viewModel = ViewModel;
+
+        // Act
+        viewModel.GoToPageVisibilityEventsDemoCommand.Execute(null);
+
+        // Assert
+        mockNavigationService.Received().Push<PageVisibilityEventPage>();
+    }
+
+    [Fact]
     public void ExitCommand_WhenCalled_ClosesTheApp()
     {
         // Arrange

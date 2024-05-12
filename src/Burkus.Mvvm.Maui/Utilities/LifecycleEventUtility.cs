@@ -36,7 +36,7 @@ internal static class LifecycleEventUtility
 
     internal static void SubscribeToPageVisibilityEvents(Page page)
     {
-        // todo: unsubscribe from these events
+        // todo: unsubscribe from these events - use https://stackoverflow.com/a/70869441/3991315 ?
         page.Appearing += Page_Appearing;
         page.Disappearing += Page_Disappearing;
     }
