@@ -387,7 +387,37 @@ Several parameter keys have been pre-defined and are using by the `Burkus.Mvvm.M
 
 The `NavigationParameters` object exposes some handy properties `.UseAnimatedNavigation` and `.UseModalNavigation` so you can easily set or check the value of these properties.
 
+### MapNavigationParameterAttribute
+
+The `MapNavigationParameterAttribute` allows you to map navigation parameters to properties in a simpler way. Add the attribute to the top of a viewmodel class with the parameter you want to populate and the navigation parameter key you want to map from.
+
+``` csharp
+[MapNavigationParameter(nameof(ShowLabel), "show_label")]
+public partial class MapPropertiesViewModel : BaseViewModel
+{
+    [ObservableProperty]
+    private bool showLabel;
+
+    // no "OnNavigatedTo" lifecycle code needed to map the property
+}
+```
+
+In the above example, if you navigate to this viewmodel and pass a boolean navigation parameter with the name `show_label`, the `ShowLabel` property on the viewmodel will automatically be set.
+
+If a viewmodel requires a navigation parameter to be passed in order to function, you can set the "required" property to true on the `MapNavigationParameterAttribute`. This will cause an exception to be thrown if the navigation to the viewmodel does not pass all required navigation parameters.
+
+``` csharp
+// both of these lines are equivalent
+[MapNavigationParameter(nameof(ShowLabel), "show_label"), true]
+[MapNavigationParameter(nameof(ShowLabel), "show_label"), required: true]
+```
+
+Properties mapped using this attribute will get set immediately before `OnNavigatedTo` gets called.
+
+It is important to note, that when you are unit testing viewmodels, you won't be able to test if the properties are set by passing parameters to `OnNavigatedTo`. This is because the mapping logic occurs in the `NavigationService`. Instead, your unit tests should instead focus on what happens when the properties are set to different values.
+
 ## Dialog service
+
 `IDialogService` is automatically registered by `.UseBurkusMvvm(...)`. It is a testable service that is an abstraction over [the MAUI alerts/pop-ups/prompts/action sheets](https://learn.microsoft.com/en-us/dotnet/maui/user-interface/pop-ups).
 
 Register the service in your viewmodel constructor:

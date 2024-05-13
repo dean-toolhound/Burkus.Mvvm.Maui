@@ -39,6 +39,12 @@ internal static class LifecycleEventUtility
             // get the property on the ViewModel
             var propertyInfo = type.GetProperty(attribute.PropertyName);
 
+            // throw an exception if the attribute is required but not found
+            if (attribute.Required && !navigationParameters.ContainsKey(attribute.NavigationParameterKey))
+            {
+                throw new BurkusMvvmException($"The navigation parameter \"{nameof(attribute.NavigationParameterKey)}\" is required but the key was not found.");
+            }
+
             var matchingParameterValue = navigationParameters.GetUntypedValue(attribute.NavigationParameterKey);
             propertyInfo?.SetValue(bindingContext, matchingParameterValue);
         }

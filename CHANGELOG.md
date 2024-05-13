@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Workaround to fix window title on WinUI
 - `IPageVisibilityEvents` interface
+- `MapNavigationParameterAttribute` to map navigation parameters to properties
+  - Parameters can be marked as required
 
 ### Fixed
 - WinUI source generator error
