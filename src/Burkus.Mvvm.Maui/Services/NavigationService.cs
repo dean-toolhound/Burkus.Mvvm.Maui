@@ -6,32 +6,6 @@ internal class NavigationService : INavigationService
 {
     #region Core navigation methods
 
-    //public async Task Push(string pageName)
-    //{
-    //    await Push(pageName, new NavigationParameters() );
-    //}
-
-    //public async Task Push(string pageName, NavigationParameters navigationParameters)
-    //{
-    //    var pageType = UriUtility.FindPageType(pageName);           // this does not work
-
-    //    if (pageType == null)
-    //    {
-    //        throw new BurkusMvvmException($"Could not find a type in assemblies for page name: {pageName}");
-    //    }
-
-    //    var pageToNavigateTo = ServiceResolver.Resolve(pageType) as Page;
-
-    //    if (navigationParameters.UseModalNavigation)
-    //    {
-    //        await Application.Current.MainPage.Navigation.PushModalAsync(pageToNavigateTo, navigationParameters.UseAnimatedNavigation);
-    //    }
-    //    else
-    //    {
-    //        await Application.Current.MainPage.Navigation.PushAsync(pageToNavigateTo, navigationParameters.UseAnimatedNavigation);
-    //    }
-    //}
-
     public async Task Push<T>() where T : Page
     {
         await Push<T>(new NavigationParameters());
