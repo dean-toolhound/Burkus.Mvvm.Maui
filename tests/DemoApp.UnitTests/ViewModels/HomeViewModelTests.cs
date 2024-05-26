@@ -2,7 +2,7 @@ using DemoApp.Abstractions;
 using DemoApp.ViewModels;
 using DemoApp.Views;
 
-namespace DemoApp.UnitTests.Services;
+namespace DemoApp.UnitTests.ViewModels;
 
 public class HomeViewModelTests
 {
@@ -123,6 +123,49 @@ public class HomeViewModelTests
 
         // Assert
         mockNavigationService.Received().Navigate("DemoTabsPage/RegisterPage/UriTestPage");
+    }
+
+    [Fact]
+    public void GoToFlyoutPageDemoCommnd_WhenCalled_NavigatesToDemoFlyoutPage()
+    {
+        // Arrange
+        var viewModel = ViewModel;
+
+        // Act
+        viewModel.GoToFlyoutPageDemoCommand.Execute(null);
+
+        // Assert
+        mockNavigationService.Received().Navigate(
+            "DemoFlyoutPage",
+            Arg.Is<NavigationParameters>(x => x.GetValue<bool>("UseModalNavigation") == true));
+    }
+
+    [Fact]
+    public void GoToPageVisibilityEventsDemoCommand_WhenCalled_NavigatesToDemoPageVisibilityEventsPage()
+    {
+        // Arrange
+        var viewModel = ViewModel;
+
+        // Act
+        viewModel.GoToPageVisibilityEventsDemoCommand.Execute(null);
+
+        // Assert
+        mockNavigationService.Received().Push<PageVisibilityEventPage>();
+    }
+
+    [Fact]
+    public void GoToMapPropertiesDemoCommand_WhenCalled_NavigatesToDemoFlyoutPage()
+    {
+        // Arrange
+        var viewModel = ViewModel;
+
+        // Act
+        viewModel.GoToMapPropertiesDemoCommand.Execute(null);
+
+        // Assert
+        mockNavigationService.Received().Push<MapPropertiesPage>(
+            Arg.Is<NavigationParameters>(x => x.GetValue<bool>("showLabel") == true
+                && x.GetValue<string>("labelText") == "This text has been mapped for you"));
     }
 
     [Fact]

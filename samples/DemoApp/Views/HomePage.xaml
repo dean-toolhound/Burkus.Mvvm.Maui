@@ -65,6 +65,22 @@
                 Command="{Binding GoToFlyoutPageDemoCommand}"
                 Style="{StaticResource PrimaryButton}"
                 Text="{x:Static properties:Resources.Home_Button_FlyoutPageDemo}" />
+            <Label
+                Margin="0,20,0,0"
+                HorizontalOptions="Center"
+                Text="{x:Static properties:Resources.Home_SubHeading_Events}" />
+            <Button
+                Command="{Binding GoToPageVisibilityEventsDemoCommand}"
+                Style="{StaticResource PrimaryButton}"
+                Text="{x:Static properties:Resources.Home_Button_PageVisibilityEventsDemo}" />
+            <Label
+                Margin="0,20,0,0"
+                HorizontalOptions="Center"
+                Text="{x:Static properties:Resources.Home_SubHeading_ParameterPassing}" />
+            <Button
+                Command="{Binding GoToMapPropertiesDemoCommand}"
+                Style="{StaticResource PrimaryButton}"
+                Text="{x:Static properties:Resources.Home_Button_MapPropertiesDemo}" />
             <Button
                 Margin="0,40,0,0"
                 Command="{Binding ExitCommand}"

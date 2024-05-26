@@ -13,7 +13,7 @@ internal class NavigationService : INavigationService
     {
         await HandleNavigation<T>(async () =>
             {
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 if (navigationParameters.UseModalNavigation)
                 {
@@ -108,7 +108,7 @@ internal class NavigationService : INavigationService
         await HandleNavigation<Page>(async () =>
             {
                 var navigation = Application.Current.MainPage.Navigation;
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 navigation.InsertPageBefore(pageToNavigateTo, navigation.NavigationStack.Last());
                 await navigation.PopAsync(navigationParameters.UseAnimatedNavigation);
@@ -128,7 +128,7 @@ internal class NavigationService : INavigationService
         await HandleNavigation<Page>(async () =>
             {
                 var navigation = Application.Current.MainPage.Navigation;
-                var pageToNavigateTo = ServiceResolver.Resolve<T>();
+                var pageToNavigateTo = GetPageToNavigateTo<T>();
 
                 if (navigation.NavigationStack.Count > 0)
                 {
@@ -202,7 +202,7 @@ internal class NavigationService : INavigationService
                 else
                 {
                     // push pages relatively onto the stack
-                    var pageToNavigateTo = ServiceResolver.Resolve(instructions[i].PageType) as Page;
+                    var pageToNavigateTo = GetPageToNavigateTo(instructions[i].PageType);
                     var pushNavigationParameters = instructions[i].QueryParameters.MergeNavigationParameters(navigationParameters);
 
                     if (pushNavigationParameters.UseModalNavigation)
@@ -255,7 +255,7 @@ internal class NavigationService : INavigationService
         else
         {
             // push page relatively onto the stack
-            var pageToNavigateTo = ServiceResolver.Resolve(lastInstruction.PageType) as Page;
+            var pageToNavigateTo = GetPageToNavigateTo(lastInstruction.PageType);
             var pushNavigationParameters = lastInstruction.QueryParameters.MergeNavigationParameters(navigationParameters);
 
             if (pushNavigationParameters.UseModalNavigation)
@@ -288,84 +288,13 @@ internal class NavigationService : INavigationService
 
     #endregion URI navigation methods
 
-    #region Internal implementation
-
-    private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
-        where T : Page
-    {
-        var fromBindingContext = MauiPageUtility.GetTopPageBindingContext();
-
-        await LifecycleEventUtility.TriggerOnNavigatingFrom(fromBindingContext, navigationParameters);
-
-        await navigationAction.Invoke();
-
-        await LifecycleEventUtility.TriggerOnNavigatedFrom(fromBindingContext, navigationParameters);
-
-        var toBindingContext = MauiPageUtility.GetTopPageBindingContext();
-        await LifecycleEventUtility.TriggerOnNavigatedTo(toBindingContext, navigationParameters);
-
-        // if the SelectTab parameter is used, we will switch tab
-        SelectTabFromParameters(navigationParameters);
-    }
-
-    private void SelectTabFromParameters(NavigationParameters navigationParameters)
-    {
-        if (string.IsNullOrWhiteSpace(navigationParameters.SelectTab))
-        {
-            // no tab to select
-            return;
-        }
-
-        var tabType = UriUtility.FindPageType(navigationParameters.SelectTab);
-        SelectTabWithType(tabType);
-    }
-
-    /// <summary>
-    /// This method allows the <see cref="SelectTab{T}()"/> to be called with reflection.
-    /// </summary>
-    private async void SelectTabWithType(Type tabType)
-    {
-        var selectTabMethod = GetType()
-            .GetMethod(nameof(SelectTab))
-            .MakeGenericMethod(tabType);
-        selectTabMethod.Invoke(this, null);
-    }
-
-    /// <summary>
-    /// This method searches for and tries to find a TabbedPage that is visible to the user.
-    /// </summary>
-    /// <param name="page">Page to search for a TabbedPage in</param>
-    /// <returns>A tabbeed page if found</returns>
-    private TabbedPage FindVisibleTabbedPage(Page page)
-    {
-        return page switch
-        {
-            TabbedPage tabbedPage => tabbedPage,
-            FlyoutPage { Detail: TabbedPage flyoutTabbedPage } => flyoutTabbedPage,
-            FlyoutPage { Detail: var detail } => GetTabbedPageFromNavigationPage(detail),
-            _ => GetTabbedPageFromNavigationPage(page)
-        };
-    }
-
-    private TabbedPage GetTabbedPageFromNavigationPage(Page page)
-    {
-        if (page is NavigationPage { CurrentPage: TabbedPage tabbedPage })
-        {
-            return tabbedPage;
-        }
-
-        return null;
-    }
-
-    #endregion Internal implementation
-
     #region Tab navigation methods
 
     public void SelectTab<T>()
         where T : Page
     {
         var topPage = MauiPageUtility.GetTopPage();
-        var tabbedPage = FindVisibleTabbedPage(topPage);
+        var tabbedPage = MauiPageUtility.FindVisibleTabbedPage(topPage);
 
         if (tabbedPage == null)
         {
@@ -416,7 +345,7 @@ internal class NavigationService : INavigationService
             return;
         }
 
-        var pageToNavigateTo = ServiceResolver.Resolve<T>();
+        var pageToNavigateTo = GetPageToNavigateTo<T>();
 
         // wrap the detail in a NavigationPage
         flyoutPage.Detail = new NavigationPage(pageToNavigateTo);
@@ -431,4 +360,75 @@ internal class NavigationService : INavigationService
     // a parameter? ToNavigationPage could be used so it could be used with URL navigation or the existing methods
 
     #endregion Flyout navigation methods
+
+    #region Internal implementation
+
+    private T GetPageToNavigateTo<T>()
+        where T: Page
+    {
+        var pageToNavigateTo = ServiceResolver.Resolve<T>();
+
+        LifecycleEventUtility.SubscribeToPageVisibilityEvents(pageToNavigateTo);
+
+        return pageToNavigateTo;
+    }
+
+    private Page GetPageToNavigateTo(Type pageType)
+    {
+        var pageToNavigateTo = ServiceResolver.Resolve(pageType) as Page;
+
+        if (pageToNavigateTo != null)
+        {
+            LifecycleEventUtility.SubscribeToPageVisibilityEvents(pageToNavigateTo);
+        }
+        else
+        {
+            // todo: warn about this being null in https://github.com/BurkusCat/Burkus.Mvvm.Maui/issues/17 ?
+        }
+
+        return pageToNavigateTo;
+    }
+
+    private async Task HandleNavigation<T>(Func<Task> navigationAction, NavigationParameters navigationParameters)
+        where T : Page
+    {
+        var fromBindingContext = MauiPageUtility.GetTopPageBindingContext();
+
+        await LifecycleEventUtility.TriggerOnNavigatingFrom(fromBindingContext, navigationParameters);
+
+        await navigationAction.Invoke();
+
+        await LifecycleEventUtility.TriggerOnNavigatedFrom(fromBindingContext, navigationParameters);
+
+        var toBindingContext = MauiPageUtility.GetTopPageBindingContext();
+        await LifecycleEventUtility.TriggerOnNavigatedTo(toBindingContext, navigationParameters);
+
+        // if the SelectTab parameter is used, we will switch tab
+        SelectTabFromParameters(navigationParameters);
+    }
+
+    private void SelectTabFromParameters(NavigationParameters navigationParameters)
+    {
+        if (string.IsNullOrWhiteSpace(navigationParameters.SelectTab))
+        {
+            // no tab to select
+            return;
+        }
+
+        var tabType = UriUtility.FindPageType(navigationParameters.SelectTab);
+        SelectTabWithType(tabType);
+    }
+
+    /// <summary>
+    /// This method allows the <see cref="SelectTab{T}()"/> to be called with reflection.
+    /// </summary>
+    private async void SelectTabWithType(Type tabType)
+    {
+        var selectTabMethod = GetType()
+            .GetMethod(nameof(SelectTab))
+            .MakeGenericMethod(tabType);
+        selectTabMethod.Invoke(this, null);
+    }
+
+    #endregion Internal implementation
 }

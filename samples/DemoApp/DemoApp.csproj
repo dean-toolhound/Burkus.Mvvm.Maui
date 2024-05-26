@@ -96,6 +96,12 @@
     <Compile Update="Views\Flyouts\DemoFlyoutPage.xaml.cs">
       <DependentUpon>DemoFlyoutPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\PageVisibilityEventPage.xaml.cs">
+      <DependentUpon>PageVisibilityEventPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MapPropertiesPage.xaml.cs">
+      <DependentUpon>MapPropertiesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\UriTestPage.xaml.cs">
       <DependentUpon>UriTestPage.xaml</DependentUpon>
     </Compile>
@@ -146,6 +152,12 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\PageVisibilityEventPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\MapPropertiesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\UriTestPage.xaml">

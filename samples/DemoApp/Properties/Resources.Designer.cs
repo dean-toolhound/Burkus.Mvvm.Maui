@@ -286,6 +286,24 @@ namespace DemoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Map Properties demo.
+        /// </summary>
+        internal static string Home_Button_MapPropertiesDemo {
+            get {
+                return ResourceManager.GetString("Home_Button_MapPropertiesDemo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page Visibility Events demo.
+        /// </summary>
+        internal static string Home_Button_PageVisibilityEventsDemo {
+            get {
+                return ResourceManager.GetString("Home_Button_PageVisibilityEventsDemo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Tabbed Page on Beta tab.
         /// </summary>
         internal static string Home_Button_StartTabbedPageOnBetaTab {
@@ -304,6 +322,15 @@ namespace DemoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Events:.
+        /// </summary>
+        internal static string Home_SubHeading_Events {
+            get {
+                return ResourceManager.GetString("Home_SubHeading_Events", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Flyout navigation:.
         /// </summary>
         internal static string Home_SubHeading_FlyoutNavigation {
@@ -318,6 +345,15 @@ namespace DemoApp.Properties {
         internal static string Home_SubHeading_ModalNavigation {
             get {
                 return ResourceManager.GetString("Home_SubHeading_ModalNavigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter Passing:.
+        /// </summary>
+        internal static string Home_SubHeading_ParameterPassing {
+            get {
+                return ResourceManager.GetString("Home_SubHeading_ParameterPassing", resourceCulture);
             }
         }
         
@@ -426,6 +462,33 @@ namespace DemoApp.Properties {
         internal static string Login_Validation_RequiredUsername {
             get {
                 return ResourceManager.GetString("Login_Validation_RequiredUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Properties.
+        /// </summary>
+        internal static string MapProperties_Title {
+            get {
+                return ResourceManager.GetString("MapProperties_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I show OnAppearing and hide OnDisappearing.
+        /// </summary>
+        internal static string PageVisibilityEvent_ShowOnAppearing {
+            get {
+                return ResourceManager.GetString("PageVisibilityEvent_ShowOnAppearing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page Visibility Events.
+        /// </summary>
+        internal static string PageVisibilityEvent_Title {
+            get {
+                return ResourceManager.GetString("PageVisibilityEvent_Title", resourceCulture);
             }
         }
         
